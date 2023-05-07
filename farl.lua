@@ -472,8 +472,11 @@ local function gatherInput(event)
   -- Get our current transmitter voltage
   currentVoltage = getValue('tx-voltage')
 
+  -- Armed / Disarm / Buzzer switch
+  armed = getValue("sc")
+
   -- Our "mode" switch
-  flight_mode = getValue("FM")
+  flight_mode = getValue("sb")
 
   -- Do some event handling to figure out what button(s) were pressed  :)
   if event > 0 then
@@ -514,31 +517,43 @@ local function gatherInput(event)
 end
 
 
+-- local function getModeText()
+--   local modeText = "Unknown"
+--
+--   if flight_mode == "!ERR" or flight_mode == "!ERR*" then
+--     modeText = "----"
+--   elseif flight_mode == "!FS!" or flight_mode == "!FS!*" then
+--     modeText = "FAILSAFE"
+--   elseif flight_mode == "RTH"then
+--     modeText = "RTH"
+--   elseif flight_mode == "MANU"then
+--     modeText = "MANUAL"
+--   elseif flight_mode == "STAB"then
+--     modeText = "ANGLE"
+--   elseif flight_mode == "HOR" then
+--     modeText = "HORIZON"
+--   elseif flight_mode == "AIR" then
+--     modeText = "AIR"
+--   elseif flight_mode == "ACRO" then
+--     modeText = "ACRO"
+--   elseif flight_mode == "WAIT" or flight_mode == "WAIT*" then
+--    modeText = "WgAIT"
+--   elseif ((string.sub(flight_mode,-1) == "*") and (flight_mode ~= "!ERR*") and (flight_mode ~= "!FS!*") and (flight_mode ~= "WAIT*")) then
+--     modeText = "DISARM"
+--   else
+--     modeText = "----"
+--   end
+--     return modeText
+-- end
+
 local function getModeText()
   local modeText = "Unknown"
-
-  if flight_mode == "!ERR" or flight_mode == "!ERR*" then
-    modeText = "----"
-  elseif flight_mode == "!FS!" or flight_mode == "!FS!*" then
-    modeText = "FAILSAFE"
-  elseif flight_mode == "RTH"then
-    modeText = "RTH"
-  elseif flight_mode == "MANU"then
-    modeText = "MANUAL"
-  elseif flight_mode == "STAB"then
-    modeText = "ANGLE"
-  elseif flight_mode == "HOR" then
-    modeText = "HORIZON"
-  elseif flight_mode == "AIR" then
-    modeText = "AIR"
-  elseif flight_mode == "ACRO" then
-    modeText = "ACRO"
-  elseif flight_mode == "WAIT" or flight_mode == "WAIT*" then
-    modeText = "WgAIT"
-  elseif ((string.sub(flight_mode,-1) == "*") and (flight_mode ~= "!ERR*") and (flight_mode ~= "!FS!*") and (flight_mode ~= "WAIT*")) then
-    modeText = "DISARM"
-  else
-    modeText = "----"
+  if flight_mode < -512 then
+    modeText = "Acro"
+  elseif flight_mode > -100 and flight_mode < 100 then
+    modeText = "Horizon"
+  elseif flight_mode > 512 then
+    modeText = "Angle"
   end
   return modeText
 end
